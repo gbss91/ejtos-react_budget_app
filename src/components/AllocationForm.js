@@ -2,13 +2,20 @@ import React, { useContext, useState } from "react";
 import { AppContext } from "../context/AppContext";
 
 const AllocationForm = (props) => {
-  const { dispatch, remaining } = useContext(AppContext);
+  const { dispatch, remaining, currency } = useContext(AppContext);
 
   const [name, setName] = useState("");
   const [cost, setCost] = useState("");
   const [action, setAction] = useState("");
 
   const submitEvent = () => {
+    // Validate input
+    if (isNaN(cost) || cost === "") {
+      alert("Invalid input. Please enter a numerical value.");
+      setCost("");
+      return;
+    }
+
     if (cost > remaining) {
       alert("The value cannot exceed remaining funds  £" + remaining);
       setCost("");
@@ -85,15 +92,17 @@ const AllocationForm = (props) => {
               Reduce
             </option>
           </select>
-
-          <input
-            required="required"
-            type="number"
-            id="cost"
-            value={cost}
-            style={{ marginLeft: "2rem", size: 10 }}
-            onChange={(event) => setCost(event.target.value)}
-          ></input>
+          <div style={{ marginLeft: "2rem" }}>
+            <label>{currency}</label>
+            <input
+              required="required"
+              type="number"
+              id="cost"
+              value={cost}
+              style={{ marginLeft: "0.5rem", size: 10 }}
+              onChange={(event) => setCost(event.target.value)}
+            ></input>
+          </div>
 
           <button
             className="btn btn-primary"
